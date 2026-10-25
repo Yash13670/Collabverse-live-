@@ -119,19 +119,13 @@ app.add_middleware(
 # CORS
 # ============================================================
 
-app.add_middleware(
-    CORSMiddleware,
-   allow_origins=[
+allowed_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://collabverse-live.vercel.app",
     "https://collabverse-live-git-main-rishabhjangra34-5417.vercel.app",
     "https://collabverse-live-kkd53p6ac-rishabhjangra34-5417.vercel.app",
-],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+]
 
 
 # ============================================================
@@ -245,3 +239,14 @@ def health():
     return {
         "status": "ok"
     }
+
+
+# Keep CORS outside FastAPI's error middleware so unhandled API errors still
+# include the CORS headers required by browser clients.
+app = CORSMiddleware(
+    app,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
